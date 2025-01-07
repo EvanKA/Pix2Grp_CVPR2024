@@ -33,8 +33,8 @@ class BlipPretrain(BlipBase, SharedQueueMixin, MomentumDistilationMixin):
     """
 
     PRETRAINED_MODEL_CONFIG_DICT = {
-        "base": "lavis/configs/models/blip_init/blip_pretrain_base.yaml",
-        # "large": "lavis/configs/models/blip_init/blip_pretrain_large.yaml",
+        "base": "configs/models/blip_init/blip_pretrain_base.yaml",
+        # "large": "configs/models/blip_init/blip_pretrain_large.yaml",
     }
 
     def __init__(
