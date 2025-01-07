@@ -47,7 +47,7 @@ class Blip2Base(BaseModel):
 
     @classmethod
     def init_Qformer(cls, num_query_token, vision_width, cross_attention_freq=2):
-        encoder_config = BertConfig.from_pretrained("bert-base-uncased", local_files_only=True,
+        encoder_config = BertConfig.from_pretrained("bert-base-uncased",
                                                     cache_dir='/mnt/petrelfs/lirongjie/project/LAVIS/lavis/configs/models')
         encoder_config.encoder_width = vision_width
         # insert cross-attention layer every other block

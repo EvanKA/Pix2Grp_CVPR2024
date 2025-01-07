@@ -85,8 +85,8 @@ class BlipDetection(BlipBase):
 
     @classmethod
     def init_tokenizer(cls):
-        tokenizer = StageBertTokenizer.from_pretrained("/public/home/lirj2/projects/LAVIS_GITM/data/bert-base-uncased",
-                                                        local_files_only=True)
+        tokenizer = StageBertTokenizer.from_pretrained("bert-base-uncased",
+                                                        )
         vocab_size = len(tokenizer)
         tokenizer.add_special_tokens({"bos_token": "[DEC]"})
         tokenizer.add_special_tokens({"additional_special_tokens": ["[ENC]"]})

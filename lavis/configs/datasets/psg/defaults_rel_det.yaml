@@ -33,4 +33,4 @@ datasets:
 
       images:
         storage: coco/images
-# \        tokenizer = BertTokenizer.from_pretrained("/public/home/lirj2/projects/LAVIS_GITM/data/bert-base-uncased")
+# \        tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
