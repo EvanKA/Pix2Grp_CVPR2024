@@ -82,7 +82,7 @@ Ensure that the checkpoint path in the configuration file (*.yaml) is accurate b
 #### Open Vocabulary SGG
 Training 
 ```bash 
-python -m torch.distributed.run --master_port 13919 --nproc_per_node=4 train.py  lavis/projects/blip/train/vrd_vg_ft_pgsg_ov.yaml --job-name VG-pgsg_ovsgg
+python -m torch.distributed.run --master_port 13919 --nproc_per_node=4 train.py --cfg-path lavis/projects/blip/train/vrd_vg_ft_pgsg_ov.yaml --job-name VG-pgsg_ovsgg
 ```
 Evaluation 
 ```bash
@@ -93,7 +93,7 @@ python -m torch.distributed.run --master_port 13958 --nproc_per_node=4 evaluate.
 
 Training 
 ```bash 
-python -m torch.distributed.run --master_port 13919 --nproc_per_node=4 train.py  lavis/projects/blip/train/vrd_vg_ft_pgsg.yaml --job-name VG-pgsg_ovsgg
+python -m torch.distributed.run --master_port 13919 --nproc_per_node=4 train.py --cfg-path lavis/projects/blip/train/vrd_vg_ft_pgsg.yaml --job-name VG-pgsg_ovsgg
 ```
 
 Evaluation 
