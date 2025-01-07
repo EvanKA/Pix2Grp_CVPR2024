@@ -29,7 +29,7 @@ model:
 
   image_size: 384
   box_loss_weight: 1.2
-  cate_dict_url: "/public/home/lirj2/projects/pix2sgg/cache/vg/vg_motif_anno/categories_dict.json"
+  cate_dict_url: "all_categories_dict/vg/vg_motif_anno/categories_dict.json"
   # "The scene of "
 
   close_clser: False
@@ -105,7 +105,7 @@ run:
   world_size: 1
   dist_url: "env://"
   distributed: True
-  cate_dict_url: "/public/home/lirj2/projects/pix2sgg/cache/vg/vg_motif_anno/categories_dict.json"
+  cate_dict_url: "all_categories_dict/vg/vg_motif_anno/categories_dict.json"
   
   zeroshot_cfg:
     zs_triplets: '/public/home/lirj2/projects/pix2sgg/cache/vg/vg_motif_anno/zeroshot_triplet_lavis.pytorch'
