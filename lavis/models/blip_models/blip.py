@@ -34,9 +34,10 @@ class BlipBase(BaseModel):
                 url_or_filename, check_hash=False, progress=True
             )
             checkpoint = torch.load(cached_file, map_location="cpu")
-        elif os.path.isfile(url_or_filename):
+        # elif os.path.isfile(url_or_filename):
+        else:
             checkpoint = torch.load(url_or_filename, map_location="cpu")
-        # else:
+        #else:
         #    raise RuntimeError("checkpoint url or path is invalid")
 
         state_dict = checkpoint["model"]
