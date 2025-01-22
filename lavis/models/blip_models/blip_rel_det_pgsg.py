@@ -80,7 +80,7 @@ class BlipRelDetectionPGSG(BlipRelDetection):
                  dump_pred=False, reduction='none', top_k_label_num=5, top_k_predicate_label_num=3,
                  mask_label_ratio=0.5, aux_close_classifier=False, cate_dict_url="", box_loss_weight=1.,
                  lora_enable=False, seg_len=48, post_proc_cfg=None,
-                 dump_dir='/mnt/petrelfs/lirongjie/project/LAVIS/lavis/output/BLIP/vis_dump',
+                 dump_dir='lavis/output/BLIP/vis_dump',
                  sgcls_on=False, predcls_on=False, close_clser=False):
         super(BlipRelDetectionPGSG, self).__init__(image_encoder, text_decoder, prompt=prompt, max_txt_len=max_txt_len,
                                                        num_coord_bin=num_coord_bin, reduction=reduction,
@@ -1761,7 +1761,7 @@ class XBertLMHeadDecoderDetHead(XBertLMHeadDecoder):
 
         if from_pretrained:
             print("load from pretrained bert-base-uncased")
-            return cls.from_pretrained("bert-base-uncased",
+            return cls.from_pretrained("https://huggingface.co/google-bert/bert-base-uncased",
                                         config=med_config, ignore_mismatched_sizes=False)
         else:
             return cls(config=med_config, pos_adapter=cfg.get("pos_adapter", False),
