@@ -1761,7 +1761,7 @@ class XBertLMHeadDecoderDetHead(XBertLMHeadDecoder):
 
         if from_pretrained:
             print("load from pretrained bert-base-uncased")
-            return cls.from_pretrained("https://huggingface.co/google-bert/bert-base-uncased",
+            return cls.from_pretrained("bert-base-uncased",
                                         config=med_config, ignore_mismatched_sizes=False)
         else:
             return cls(config=med_config, pos_adapter=cfg.get("pos_adapter", False),

@@ -21,13 +21,14 @@ logger = logging.getLogger("lavis")
 class BlipBase(BaseModel):
     @classmethod
     def init_tokenizer(cls):
-        tokenizer = BertTokenizer.from_pretrained("https://huggingface.co/google-bert/bert-base-uncased")
+        tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
         tokenizer.add_special_tokens({"bos_token": "[DEC]"})
         tokenizer.add_special_tokens({"additional_special_tokens": ["[ENC]"]})
         tokenizer.enc_token_id = tokenizer.additional_special_tokens_ids[0]
         return tokenizer
 
     def load_from_pretrained(self, url_or_filename):
+        print(url_or_filename)
         if is_url(url_or_filename):
             cached_file = download_cached_file(
                 url_or_filename, check_hash=False, progress=True
@@ -35,8 +36,8 @@ class BlipBase(BaseModel):
             checkpoint = torch.load(cached_file, map_location="cpu")
         elif os.path.isfile(url_or_filename):
             checkpoint = torch.load(url_or_filename, map_location="cpu")
-        else:
-            raise RuntimeError("checkpoint url or path is invalid")
+        # else:
+        #    raise RuntimeError("checkpoint url or path is invalid")
 
         state_dict = checkpoint["model"]
 
