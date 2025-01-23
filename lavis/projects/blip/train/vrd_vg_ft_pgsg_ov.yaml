@@ -30,7 +30,7 @@ model:
 
   image_size: 384
   box_loss_weight: 1.2
-  cate_dict_url: "/public/home/lirj2/projects/pix2sgg/cache/vg/vg_motif_anno/categories_dict.json"
+  cate_dict_url: "all_categories_dict/vg/vg_motif_anno/categories_dict.json"
   # "The scene of "
 
   top_k_ent_label_num: 1
@@ -106,8 +106,8 @@ run:
   world_size: 1
   dist_url: "env://"
   distributed: True
-  cate_dict_url: "/public/home/lirj2/projects/pix2sgg/cache/vg/vg_motif_anno/categories_dict.json"
+  cate_dict_url: "all_categories_dict/vg/vg_motif_anno/categories_dict.json"
   
   zeroshot_cfg:
-    zs_triplets: '/public/home/lirj2/projects/pix2sgg/cache/vg/vg_motif_anno/zeroshot_triplet_lavis.pytorch'
+    zs_triplets: 'cache/vg/vg_motif_anno/zeroshot_triplet.pytorch'
     zs_predicate: [0, 1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 23, 25, 26, 27, 31, 34, 35, 36, 40, 41, 42, 44, 48]
