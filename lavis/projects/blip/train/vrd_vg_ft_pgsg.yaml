@@ -74,8 +74,8 @@ run:
     - ["text_decoder.ent_hs_input_proj", 1e-4,  1e-4]
     - ["text_decoder.bert.embeddings.word_embeddings", 1e-18,  0.05]
 
-  batch_size_train: 4
-  batch_size_eval: 4
+  batch_size_train: 2
+  batch_size_eval: 2
   num_workers: 4
 
   save_epoch: 10
