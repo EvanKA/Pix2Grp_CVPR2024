@@ -9,7 +9,7 @@ model:
 
   max_txt_len: 512 # test time
   # max_objects: 50
-  dump_pred: False
+  dump_pred: True
   dump_dir: "lavis/output/BLIP/rel_detection_vg/vis_dump_val"
 
   seg_len: 32
