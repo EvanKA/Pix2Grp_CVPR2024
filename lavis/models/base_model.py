@@ -39,10 +39,11 @@ class BaseModel(nn.Module):
                 url_or_filename, check_hash=False, progress=True
             )
             checkpoint = torch.load(cached_file, map_location="cpu")
-        elif os.path.isfile(url_or_filename):
-            checkpoint = torch.load(url_or_filename, map_location="cpu")
+        # elif os.path.isfile(url_or_filename):
         else:
-            raise RuntimeError("checkpoint url or path is invalid")
+            checkpoint = torch.load(url_or_filename, map_location="cpu")
+        # else:
+        #    raise RuntimeError("checkpoint url or path is invalid")
 
         if "model" in checkpoint.keys():
             state_dict = checkpoint["model"]
