@@ -22,12 +22,13 @@ model:
   top_k_predicate_label_num: 5
 
   # finetuned: "lavis/output/BLIP/rel_detection_vg/20231021115-vg_zs_pred-train/checkpoint_35.pth"
-  finetuned: "lavis/output/BLIP/rel_detection_vg/20231021115-vg_zs_pred-train/checkpoint_45.pth"
+  # finetuned: "lavis/output/BLIP/rel_detection_vg/20231021115-vg_zs_pred-train/checkpoint_45.pth"
+  finetuned: "lavis/output/BLIP/rel_detection_vg/vg_ov_sgg.pth"
 
   num_coord_bin: 640
   image_size: 384
   # image_size: 640
-  cate_dict_url: "/public/home/lirj2/projects/pix2sgg/cache/vg/vg_motif_anno/categories_dict.json"
+  cate_dict_url: "all_categories_dict/vg/vg_motif_anno/categories_dict.json"
 
   post_proc_cfg:
     ent_ampl_scale: 5.0
@@ -74,7 +75,7 @@ run:
   distributed: True
 
   zeroshot_cfg:
-    zs_triplets: '/public/home/lirj2/projects/pix2sgg/cache/vg/vg_motif_anno/zeroshot_triplet_lavis.pytorch'
+    zs_triplets: 'cache/vg/vg_motif_anno/zeroshot_triplet.pytorch'
     zs_predicate: [0, 1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 23, 25, 26, 27, 31, 34, 35, 36, 40, 41, 42, 44, 48]
 
-  cate_dict_url: "/public/home/lirj2/projects/pix2sgg/cache/vg/vg_motif_anno/categories_dict.json"
+  cate_dict_url: "all_categories_dict/vg/vg_motif_anno/categories_dict.json"
