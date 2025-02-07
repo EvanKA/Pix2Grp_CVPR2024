@@ -690,6 +690,7 @@ class BlipRelDetectionPGSG(BlipRelDetection):
                                 for i in range(len(f_dec_tokens))]
 
         pos_ada_output = None
+        '''
         if self.text_decoder.pos_adapter_on:
             pred_ent_hs_all = []
             sequence_output = forward_decoder_output.hidden_states
@@ -706,7 +707,7 @@ class BlipRelDetectionPGSG(BlipRelDetection):
 
             pos_ada_output = self.text_decoder.pos_adapter(
                     pred_ent_hs_all, samples['image'], image_embeds, encoder_attention_mask, box_targets)
-
+        '''
         for bi, b_pred_inst in enumerate(batch_object_list_cate_trans):
             for each_inst in b_pred_inst:
                 each_inst['obj'].pop('dec_hs')
