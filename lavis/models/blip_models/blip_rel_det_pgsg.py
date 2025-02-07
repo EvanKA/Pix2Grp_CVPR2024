@@ -751,8 +751,8 @@ class BlipRelDetectionPGSG(BlipRelDetection):
         with open(os.path.join(self.dump_dir, f'vl_det_dump_{image_ids}.pkl'), 'wb') as f:
             pickle.dump(forward_buffer, f)
 
-        if image_ids > 48:
-            exit()
+        #if image_ids > 48:
+        #    exit()
 
     def seq2instance(self, decoder_out, raw_caption, prompt_length=None, verbose=False):
         """_summary_
