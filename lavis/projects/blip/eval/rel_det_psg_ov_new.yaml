@@ -59,8 +59,10 @@ run:
   # task: retrieval
   task: relation_detection
   # optimizer
-  batch_size_train: 32
-  batch_size_eval: 12
+  # batch_size_train: 32
+  # batch_size_eval: 12
+  batch_size_train: 4
+  batch_size_eval: 4
   num_workers: 5
 
   max_len: 960
