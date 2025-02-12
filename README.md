@@ -112,7 +112,7 @@ python -m torch.distributed.run --master_port 13919 --nproc_per_node=4 train.py 
 ```
 Evaluation
 ```bash
-python -m torch.distributed.run --master_port 13958 --nproc_per_node=4 evaluate.py --cfg-path lavis/projects/blip/eval/rel_det_psg_ov.yaml --job-name psg-pgsg_ovsgg-eval 
+python -m torch.distributed.run --master_port 13958 --nproc_per_node=4 evaluate.py --cfg-path lavis/projects/blip/eval/rel_det_psg_ov_new.yaml --job-name psg-pgsg_ovsgg-eval 
 ```
 #### Standard SGG
 Training
