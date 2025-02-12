@@ -13,7 +13,8 @@ model:
   dump_pred: False
   dump_dir: "lavis/output/BLIP/rel_detection_psg/vis_dump_val"
   # finetuned: "lavis/output/BLIP/rel_detection_psg/20240129151-close_vocab_psg-train/checkpoint_95.pth"
-  finetuned: "lavis/output/BLIP/rel_detection_psg/20230825111-psg_zs_pred_continue-train/checkpoint_25.pth"
+  # finetuned: "lavis/output/BLIP/rel_detection_psg/20230825111-psg_zs_pred_continue-train/checkpoint_25.pth"
+  finetuned: "lavis/output/BLIP/rel_detection_psg/psg_ov_sgg.pth"
   close_clser: False
   
   top_k_ent_label_num: 1
