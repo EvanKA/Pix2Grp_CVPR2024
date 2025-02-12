@@ -31,4 +31,4 @@ datasets:
             - psg/psg_val_dev.json
 
       images:
-        storage: coco/images
+        storage: psg/images
