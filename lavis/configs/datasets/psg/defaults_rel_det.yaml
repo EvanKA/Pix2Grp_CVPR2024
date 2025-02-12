@@ -32,5 +32,5 @@ datasets:
             - psg/psg_val.json
 
       images:
-        storage: coco/images
+        storage: psg/images
 # \        tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
