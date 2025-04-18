@@ -75,7 +75,7 @@ class BlipRelDetectionPGSG(BlipRelDetection):
         "base_psg": "configs/models/blip_vrd_base_psg.yaml",
     }
 
-    def __init__(self, image_encoder, text_decoder, prompt="The visual scene of: ", max_txt_len=40,
+    def __init__(self, image_encoder, text_decoder, prompt="The visual scene of: ", max_txt_len=100,
                  max_objects=99, max_pos_objects=20, num_coord_bin=1000, add_noise=False,
                  dump_pred=False, reduction='none', top_k_label_num=5, top_k_predicate_label_num=3,
                  mask_label_ratio=0.5, aux_close_classifier=False, cate_dict_url="", box_loss_weight=1.,
