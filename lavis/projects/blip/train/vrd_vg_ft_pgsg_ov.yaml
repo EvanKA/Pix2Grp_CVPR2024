@@ -75,8 +75,8 @@ run:
     - ["text_decoder.bert.embeddings.word_embeddings", 1e-18,  0.05]
 
 
-  batch_size_train: 8
-  batch_size_eval: 6
+  batch_size_train: 16
+  batch_size_eval: 12
   num_workers: 4
 
   save_epoch: 10
