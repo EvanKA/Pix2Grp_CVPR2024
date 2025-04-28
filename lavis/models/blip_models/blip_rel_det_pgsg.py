@@ -498,8 +498,8 @@ class BlipRelDetectionPGSG(BlipRelDetection):
         samples,
         use_nucleus_sampling=True,
         num_beams=3,
-        max_length=30,
-        min_length=10,
+        max_length=100,
+        min_length=3,
         top_p=0.9,
         repetition_penalty=1.0,
         num_captions=1,
@@ -626,6 +626,7 @@ class BlipRelDetectionPGSG(BlipRelDetection):
         #       generate_len, batch_size*num_beams, vocab_size
         # raw_caption = [self.tokenizer.decode(decoder_out_collect.sequences[i].detach().cpu(), decode_raw_tokens=True, skip_special_tokens=True)
         #                for i in range(len(decoder_out.sequences))]
+        # --- Stage 1: Generate and Parse Scene Graph ---
         raw_caption = []
         for seq in decoder_out.sequences:
             raw_caption.append(self.tokenizer.convert_ids_to_tokens(seq, skip_special_tokens=False))
@@ -633,6 +634,51 @@ class BlipRelDetectionPGSG(BlipRelDetection):
         batch_object_list = self.seq2instance(decoder_out, raw_caption, verbose=False)
 
         batch_object_list_cate_trans = self.vocab2category(batch_object_list)
+
+        # --- Stage 2: Generate Description for each Triplet ---
+        logger.info(f"Generating descriptions for {sum(len(b) for b in batch_object_list_cate_trans)} triplets...")
+        desc_max_len = 100 # Max length for description
+        desc_min_len = 3  # Min length for description
+        for bi, batch_inst in enumerate(batch_object_list_cate_trans):
+            if not batch_inst: continue # Skip if no instances detected for this image
+
+            # Prepare image embeds for this batch item (handle potential beam search repetition)
+            # Assuming num_beams=1 or taking the first beam for simplicity here.
+            # If num_beams > 1 was used for scene graph, we might need to select the correct image_embeds instance.
+            current_image_embeds = image_embeds[bi].unsqueeze(0) # Shape: [1, num_patches, embed_dim]
+
+            for inst_idx, inst in enumerate(batch_inst):
+                sub_label = inst['sub']['label']
+                pred_label = inst['predicate']['label']
+                obj_label = inst['obj']['label']
+
+                # Create a prompt for description generation
+                desc_prompt_text = f"Describe the relationship: {sub_label} {pred_label} {obj_label} ."
+                desc_prompt = self.tokenizer(desc_prompt_text, return_tensors="pt").to(self.device)
+                desc_prompt.input_ids[:, 0] = self.tokenizer.bos_token_id
+                desc_prompt.input_ids = desc_prompt.input_ids[:, :-1] # Remove SEP/EOS if tokenizer adds it
+
+                # Generate description
+                desc_decoder_out = self.text_decoder.generate_from_encoder(
+                    tokenized_prompt=desc_prompt,
+                    visual_embeds=current_image_embeds, # Use embeds for the specific image
+                    sep_token_id=self.tokenizer.sep_token_id,
+                    pad_token_id=self.tokenizer.pad_token_id,
+                    use_nucleus_sampling=use_nucleus_sampling, # Use same sampling strategy or specific one for desc
+                    num_beams=num_beams, # Use same beam search or specific one for desc
+                    max_length=desc_max_len + desc_prompt.input_ids.shape[1], # Adjust max_length based on prompt
+                    min_length=desc_min_len + desc_prompt.input_ids.shape[1], # Adjust min_length based on prompt
+                    top_p=top_p,
+                    repetition_penalty=repetition_penalty,
+                    num_return_sequences=1, # Generate one description per triplet
+                )
+
+                # Decode and store the description
+                description = self.tokenizer.decode(desc_decoder_out[0], skip_special_tokens=True)
+                # Remove the prompt part from the generated description
+                description = description.replace(desc_prompt_text.replace(" .", ""), "").strip()
+                batch_object_list_cate_trans[bi][inst_idx]['description'] = description
+        logger.info("Finished generating descriptions.")
 
         if self.text_decoder.pos_adapter_on:
             # extract entity instance and categories hs
@@ -964,7 +1010,6 @@ class BlipRelDetectionPGSG(BlipRelDetection):
                                         "pred_scores": sub_pred_scores.detach().cpu(),
                                         'pred_dist': sub_pred_scores_dist,
                                         'dec_hs': sub_tok_hs,
-                                        'description': self.tokenizer.clean_text_from_decode(sub_label_name), # Added description
                                         'int_tok_hs': sub_int_tok_hs, },
                                 'obj': {
                                         "label": self.tokenizer.clean_text_from_decode(obj_label_name),
@@ -975,7 +1020,6 @@ class BlipRelDetectionPGSG(BlipRelDetection):
                                         "pred_scores": obj_pred_scores.detach().cpu(),
                                         'pred_dist': obj_pred_dist,
                                         'dec_hs': obj_tok_hs,
-                                        'description': self.tokenizer.clean_text_from_decode(sub_label_name), # Added description
                                         'int_tok_hs': obj_int_tok_hs, },
                                 "predicate": {
                                             "label": self.tokenizer.clean_text_from_decode(predicate_label_name),
@@ -986,7 +1030,6 @@ class BlipRelDetectionPGSG(BlipRelDetection):
                                               "token_start": pred_label_start,
                                               "token_end": pred_label_end,
                                               'dec_hs': predicate_tok_hs,
-                                              'description': self.tokenizer.clean_text_from_decode(sub_label_name), # Added description
                                                'int_tok_hs': init_predicate_tok_hs, }}
                     # if verbose:
                     #     print(new_inst['sub']['label'], new_inst['predicate']['label'], new_inst['obj']['label'])
@@ -1054,6 +1097,7 @@ class BlipRelDetectionPGSG(BlipRelDetection):
 
                 all_predicates_scores = []
                 all_triplets_scores = []
+                all_descriptions = [] # Store descriptions corresponding to initial triplets
                 all_predicates_dist = []
 
                 init_inst_idx = []
@@ -1434,6 +1478,7 @@ class BlipRelDetectionPGSG(BlipRelDetection):
                     all_obj_labels).cpu()[triplets_indx]
                 all_sub_labels_sorted = torch.cat(
                     all_sub_labels).cpu()[triplets_indx]
+                all_descriptions_sorted = [all_descriptions[i] for i in init_inst_idx_sorted.tolist()] # Reorder descriptions
 
                 # unexpand fields
                 init_inst_idx_sorted = torch.cat(
@@ -1562,6 +1607,7 @@ class BlipRelDetectionPGSG(BlipRelDetection):
                 triplets_scores = triplets_scores[non_self_conn_idx]
                 all_predicates_scores_sorted = all_predicates_scores_sorted[non_self_conn_idx]
                 all_predicates_dist_sorted = all_predicates_dist_sorted[non_self_conn_idx]
+                all_descriptions_sorted = [all_descriptions_sorted[i] for i, keep in enumerate(non_self_conn_idx) if keep] # Filter descriptions
 
                 # triplets NMS
                 all_rel_tripelts, bin_mask = rel_prediction_filtering(
@@ -1573,6 +1619,7 @@ class BlipRelDetectionPGSG(BlipRelDetection):
                 all_predicates_scores_sorted = all_predicates_scores_sorted[bin_mask]
                 all_pred_labels_sorted = all_pred_labels_sorted[bin_mask]
                 triplets_scores = triplets_scores[bin_mask]
+                all_descriptions_sorted = [all_descriptions_sorted[i] for i, keep in enumerate(bin_mask) if keep] # Filter descriptions
 
                 _, triplets_indx = triplets_scores.sort(
                     dim=0, descending=True)
@@ -1597,7 +1644,8 @@ class BlipRelDetectionPGSG(BlipRelDetection):
                     'pred_rel_label', all_pred_labels_sorted[triplets_indx])
                 prediction.add_field('pred_rel_trp_score',
                                      triplets_scores[triplets_indx])
-
+               prediction.add_field('rel_descriptions', # Add descriptions field
+                                     [all_descriptions_sorted[i] for i in triplets_indx.tolist()])
                 prediction = prediction.to(torch.device('cpu'))
 
             else:
@@ -1617,6 +1665,7 @@ class BlipRelDetectionPGSG(BlipRelDetection):
                 prediction.add_field('pred_rel_score', torch.zeros((1)))
                 prediction.add_field('pred_rel_label', torch.zeros((1)).int())
                 prediction.add_field('pred_rel_trp_score', torch.zeros((1)))
+                prediction.add_field('rel_descriptions', ['']) # Add empty description for padding
                 prediction = prediction.to(torch.device('cpu'))
 
             predictions.append(prediction)
