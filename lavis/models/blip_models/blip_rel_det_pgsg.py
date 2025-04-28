@@ -1449,6 +1449,7 @@ class BlipRelDetectionPGSG(BlipRelDetection):
 
                     all_obj_box.append(each_inst['obj']['boxes'])
                     all_sub_box.append(each_inst['sub']['boxes'])
+                    all_descriptions.append(each_inst.get('description', '')) # Collect description
 
                 all_triplets_scores = torch.cat(all_triplets_scores).cpu()
                 all_predicates_scores = torch.cat(all_predicates_scores).cpu()
