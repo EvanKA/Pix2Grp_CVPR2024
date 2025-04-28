@@ -1644,7 +1644,7 @@ class BlipRelDetectionPGSG(BlipRelDetection):
                     'pred_rel_label', all_pred_labels_sorted[triplets_indx])
                 prediction.add_field('pred_rel_trp_score',
                                      triplets_scores[triplets_indx])
-               prediction.add_field('rel_descriptions', # Add descriptions field
+                prediction.add_field('rel_descriptions', # Add descriptions field
                                      [all_descriptions_sorted[i] for i in triplets_indx.tolist()])
                 prediction = prediction.to(torch.device('cpu'))
 
