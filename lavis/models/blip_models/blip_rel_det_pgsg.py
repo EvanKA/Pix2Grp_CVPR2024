@@ -498,8 +498,8 @@ class BlipRelDetectionPGSG(BlipRelDetection):
         samples,
         use_nucleus_sampling=True,
         num_beams=3,
-        max_length=100,
-        min_length=3,
+        max_length=30,
+        min_length=5,
         top_p=0.9,
         repetition_penalty=1.0,
         num_captions=1,
@@ -637,8 +637,8 @@ class BlipRelDetectionPGSG(BlipRelDetection):
 
         # --- Stage 2: Generate Description for each Triplet ---
         logger.info(f"Generating descriptions for {sum(len(b) for b in batch_object_list_cate_trans)} triplets...")
-        desc_max_len = 100 # Max length for description
-        desc_min_len = 3  # Min length for description
+        desc_max_len = 30 # Max length for description
+        desc_min_len = 5  # Min length for description
         for bi, batch_inst in enumerate(batch_object_list_cate_trans):
             if not batch_inst: continue # Skip if no instances detected for this image
 
