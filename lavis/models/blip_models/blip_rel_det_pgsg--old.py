@@ -3,7 +3,6 @@
  All rights reserved.
  SPDX-License-Identifier: BSD-3-Clause
  For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
- Assisted with Gemini 2.5 Pro
 """
 from pprint import pprint
 import copy
@@ -964,7 +963,6 @@ class BlipRelDetectionPGSG(BlipRelDetection):
                                         "pred_scores": sub_pred_scores.detach().cpu(),
                                         'pred_dist': sub_pred_scores_dist,
                                         'dec_hs': sub_tok_hs,
-                                        'description': self.tokenizer.clean_text_from_decode(sub_label_name), # Added description
                                         'int_tok_hs': sub_int_tok_hs, },
                                 'obj': {
                                         "label": self.tokenizer.clean_text_from_decode(obj_label_name),
@@ -975,7 +973,6 @@ class BlipRelDetectionPGSG(BlipRelDetection):
                                         "pred_scores": obj_pred_scores.detach().cpu(),
                                         'pred_dist': obj_pred_dist,
                                         'dec_hs': obj_tok_hs,
-                                        'description': self.tokenizer.clean_text_from_decode(sub_label_name), # Added description
                                         'int_tok_hs': obj_int_tok_hs, },
                                 "predicate": {
                                             "label": self.tokenizer.clean_text_from_decode(predicate_label_name),
@@ -986,7 +983,6 @@ class BlipRelDetectionPGSG(BlipRelDetection):
                                               "token_start": pred_label_start,
                                               "token_end": pred_label_end,
                                               'dec_hs': predicate_tok_hs,
-                                              'description': self.tokenizer.clean_text_from_decode(sub_label_name), # Added description
                                                'int_tok_hs': init_predicate_tok_hs, }}
                     # if verbose:
                     #     print(new_inst['sub']['label'], new_inst['predicate']['label'], new_inst['obj']['label'])
