@@ -1478,7 +1478,6 @@ class BlipRelDetectionPGSG(BlipRelDetection):
                     all_obj_labels).cpu()[triplets_indx]
                 all_sub_labels_sorted = torch.cat(
                     all_sub_labels).cpu()[triplets_indx]
-                all_descriptions_sorted = [all_descriptions[i] for i in init_inst_idx_sorted.tolist()] # Reorder descriptions
 
                 # unexpand fields
                 init_inst_idx_sorted = torch.cat(
@@ -1489,6 +1488,7 @@ class BlipRelDetectionPGSG(BlipRelDetection):
                     all_sub_dist).cpu()[init_inst_idx_sorted]
                 all_predicates_dist_sorted = torch.stack(all_predicates_dist).cpu()[
                     init_inst_idx_sorted]
+                all_descriptions_sorted = [all_descriptions[i] for i in init_inst_idx_sorted.tolist()] # Reorder descriptions
 
                 all_obj_box_sorted = torch.stack(
                     all_obj_box).cpu()[init_inst_idx_sorted]
